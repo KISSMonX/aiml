@@ -18,8 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include <libxml/parserInternals.h>
+#include <stdlib.h>
+#include <string.h>
 #include "core.h"
 
 using namespace std;
@@ -90,7 +92,7 @@ bool AIMLparser::parse(const std::string& filename, bool _trim_blanks, bool at_r
     else runtime_error = "couldn't get a parsing context";
     return false;
   }
-  
+
   xmlSAXHandlerPtr old_sax = xml_context->sax;
   xml_context->sax = &xml_handler;
   xml_context->userData = this;

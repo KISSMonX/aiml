@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include <ctime>
 #include <cmath>
 #include "config.h"
@@ -35,7 +35,7 @@ bool cGraphMaster::isMatch(InputIterator input, InputIterator pattern, unsigned 
   input++; pattern++;
 
   if (patt_head == "_" && isMatchWildcard(input, pattern, rec)) return true;
-  
+
   if (patt_head == input_head) {
     if (input.isDone()) { if (pattern.isDone()) return true; else return false; }
     else {
@@ -48,7 +48,7 @@ bool cGraphMaster::isMatch(InputIterator input, InputIterator pattern, unsigned 
   }
 
   if (patt_head == "*" && isMatchWildcard(input, pattern, rec)) return true;
-  
+
   return false;
 }
 
@@ -83,7 +83,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
 
   while (!templ.at_end()) {
     _DBG_CODE(msg_dbg() << "[" << rec << "] loop" << endl);
-    
+
     size_t len, int_type;
     size_t chars_read, chars_read_tag = 0;
 
@@ -143,7 +143,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
             size_t old_size = templ.limitSize(len - chars_read_tag);
             while(!templ.at_end()) {
               size_t chars_read_li = 0;
-              
+
               // get header
               size_t li_len, li_type, li_subtype;
               if (!(chars_read = templ.readNumber(li_len))) return false;
@@ -155,16 +155,16 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
 
               // skip any character data found between tags
               if (li_type != TEMPL_LI) return false;
-              
+
               if (!(chars_read = templ.readNumber(li_subtype))) return false;
               chars_read_li += chars_read;
 
               bool matches = true;
-              
+
               if ((cond_type == TEMPL_CONDITION_SINGLE && li_subtype == TEMPL_LI_VALUE) ||
                   (cond_type == TEMPL_CONDITION_MULTI && li_subtype == TEMPL_LI_NAME_VALUE))
               {
-                
+
                 if (cond_type == TEMPL_CONDITION_MULTI) {
                   if (!(chars_read = templ.readString(name))) return false;
                   chars_read_li += chars_read;
@@ -213,7 +213,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
       {
         size_t index1;
         if (!(chars_read = templ.readNumber(index1))) return false;
- 
+
         const list<string>* curr_star = NULL;
         switch(int_type) {
           case TEMPL_STAR:      curr_star = &sh.patt;   break;
@@ -223,11 +223,11 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
             return false;
           break;
         }
-        
+
         if (index1 >= 1 && (index1 - 1) < curr_star->size()) templ_str += getStrListIdx(index1 - 1, *curr_star);
       }
       break;
-      
+
       case TEMPL_THAT:
       case TEMPL_INPUT:
         {
@@ -252,7 +252,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
           size_t chars_read_li = 0, chars_read;
           size_t li_len, li_type;
           li_positions.push_back(templ.tell());
-          
+
           if (!(chars_read = templ.readNumber(li_len))) return false;
           chars_read_li += chars_read;
           if (!(chars_read = templ.readNumber(li_type))) return false;
@@ -285,12 +285,12 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
         old_size = templ.limitSize(li_len - chars_read_li);
         if (!readTemplate(templ, sh, user, li_content, log, rec+1)) return false;
         templ.restoreSize(old_size);
-        
+
         templ_str += li_content;
         templ.seek(len - chars_read_tag, old_pos);
       }
       break;
-      
+
       case TEMPL_GOSSIP:
       case TEMPL_THINK:
       {
@@ -316,7 +316,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
         aiml_core.learn_file(uri, true);
       }
       break;
-      
+
       case TEMPL_SRAI:
       {
         string inner;
@@ -367,7 +367,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
           if (chars_written < 512) formatted_time.assign(formatted_time_buf, chars_written);
           templ_str += formatted_time;
         }
-        else 
+        else
           templ_str += std_util::strip(ctime(&curr_time), '\n', std_util::RIGHT);
       }
       break;
@@ -384,7 +384,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
       case TEMPL_VERSION:
         templ_str += string("libaiml " VERSION);
       break;
-      
+
       case TEMPL_PERSON:
       case TEMPL_PERSON2:
       case TEMPL_GENDER:
@@ -411,7 +411,7 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
         templ_str += value;
       }
       break;
-      
+
       case TEMPL_SR:
       {
         if (sh.patt.empty()) break;
@@ -439,17 +439,17 @@ bool cGraphMaster::readTemplate(cReadBuffer& templ, const StarsHolder& sh, cUser
         templ_str += star;
       }
       break;
-      
+
       case TEMPL_SET:
       {
         string name, value;
         if (!(chars_read = templ.readString(name))) return false;
         chars_read_tag += chars_read;
-        
+
         size_t old_size = templ.limitSize(len - chars_read_tag);
         if (!readTemplate(templ, sh, user, value, log, rec+1)) return false;
         templ.restoreSize(old_size);
-        
+
         templ_str += value;
         user.setVar(name, value);
       }

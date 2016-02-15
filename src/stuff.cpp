@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include <ctype.h>
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include "core.h"
 using namespace std;
 using namespace aiml;
@@ -67,7 +67,7 @@ void aiml::do_split(string input, vector<string>& out, const string& sentence_li
   string sentence;
   size_t pos = input.find_first_of(sentence_limit);
   bool should_end = false;
-  while(!should_end) { 
+  while(!should_end) {
     // process and save the sentence
     if (pos == string::npos) { should_end = true; sentence = input; }
     else { sentence = input.substr(0, pos); }

@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include <fstream>
 #include <glob.h>
 #include "core.h"
@@ -35,7 +35,7 @@ cCore::cCore(void) :
           cfg_parser(*this),
           cfg(std_util::cConfig::ERRLEV_QUIET), user_manager(*this), initialized(false)
 { }
-          
+
 cCore::~cCore(void) { deinitialize(); }
 
 bool cCore::initialize(const std::string& filename) {
@@ -53,7 +53,7 @@ bool cCore::initialize(const std::string& filename, const cCoreOptions& opts) {
 
 void cCore::deinitialize(void) {
   if (!initialized) return;
-  
+
   if (file_gossip_stream.is_open()) file_gossip_stream.close();
   user_manager.save(cfg_options.user_file);
   initialized = false;
@@ -93,7 +93,7 @@ bool cCore::loadGraphmaster(const std::string& file) {
 
 bool cCore::respond(const std::string& input, const std::string& username, std::string& output, std::list<cMatchLog>* log) {
   if (!initialized) { set_error(AIMLERR_NOT_INIT); return false; }
-  
+
   vector<string> sentences;
   graphmaster.normalize(input, sentences);
   if (sentences.empty()) { set_error(AIMLERR_EMPTY_INPUT); return false; }
@@ -157,7 +157,7 @@ bool cCore::load_aiml_files(void) {
   for (size_t i = 1; true; i++) {
     string partial_token;
     if (!std_util::gettok(cfg_options.file_patterns, partial_token, i)) break;
-    
+
     if (!partial_token.empty() && partial_token[partial_token.length()-1] == '\\') full_token += (partial_token + ' ');
     else {
       full_token += partial_token;

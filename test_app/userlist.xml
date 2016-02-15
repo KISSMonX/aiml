@@ -1,3 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <userset>
+  <user name="localhost">
+    <set name="eindex"><![CDATA[1A]]></set>
+    <set name="it"><![CDATA[你好]]></set>
+    <set name="top"><![CDATA[你好]]></set>
+    <set name="topic"><![CDATA[你好]]></set>
+  </user>
 </userset>

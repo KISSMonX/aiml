@@ -18,9 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include <list>
 #include <stack>
+#include <algorithm>
 #include "config.h"
 #include "core.h"
 
@@ -79,7 +80,7 @@ void cGraphMaster::addNode(AIMLentry& entry, NodeType curr_type, NodeVec& tree, 
         else addNode(entry, nextNodeType(curr_type), it->diff_childs, rec+1);
       }
       else addNode(entry, curr_type, it->same_childs, rec+1);
-      
+
       return;
     }
   }
@@ -102,7 +103,7 @@ void cGraphMaster::addSubstitution(const std::string& from, const std::string& t
 
   // this avoids doing tolower() when doing case insensitive comparison
   if (!is_a_regex) to_lowercase(subs_pair.from);
-  
+
 #ifdef ENABLE_PCRECPP
   if (is_a_regex) {
     pcrecpp::RE exp(from);
@@ -138,7 +139,7 @@ void cGraphMaster::do_substitutions(string& input, const SubstitutionList& subs_
     // from is already lowercase
     const string& from = it->from;
     const string& to = it->to;
-    
+
     if (!it->regex) {
       for (size_t i = 0; i < input.length(); i++) {
         size_t j;
@@ -172,7 +173,7 @@ void cGraphMaster::do_substitutions(string& input, const SubstitutionList& subs_
 bool cGraphMaster::getAnswer(const string& input, cUser& user, string& output, std::list<cMatchLog>* log) {
   MatcherStruct ms(user, log);
   list<string> input_list;
-  
+
   tokenizeToList(input, input_list);
   bool is_empty = input_list.empty();
 
@@ -180,7 +181,7 @@ bool cGraphMaster::getAnswer(const string& input, cUser& user, string& output, s
   else if (root.empty()) { set_error(AIMLERR_EMPTY_GM); return false; }
   else {
     if (log) log->resize(log->size() + 1);
-    
+
     if (!getMatch(is_empty ? list<string>(1, ".") : input_list, NODE_PATT, root, ms, 0)) {
       set_error(AIMLERR_NO_MATCH);
       if (log) log->pop_back();
@@ -201,13 +202,13 @@ bool cGraphMaster::getMatch(InputIterator input, NodeType curr_type, const NodeV
   input++;
 
   _DBG_CODE(msg_dbg() << "[" << rec << "]getMatch(" << curr_type << ") HEAD: [" << input_front << "] last input?:" << boolalpha << input.isDone() << endl);
-  
+
   /** FIRST WILDCARD: try to match the '_' wildcard **/
   if (tree.front().key == "_") {
     _DBG_CODE(msg_dbg() << "[" << rec << "]" << "Looking in '_'" << endl);
     if (getMatchWildcard(input, curr_type, tree.front(), ms, rec, input_front)) { if (ms.log) ms.logMatch("_", curr_type); return true; }
   }
-  
+
   /** KEYS: if wildcard didn't matched, look for specific matching keys against current input_front **/
   _DBG_CODE(msg_dbg() << "[" << rec << "]" << "KEYS" << endl);
   Node tmp_node;
@@ -248,7 +249,7 @@ bool cGraphMaster::getMatch(InputIterator input, NodeType curr_type, const NodeV
     _DBG_CODE(msg_dbg() << "[" << rec << "]" << "Looking in '*'" << endl);
     if (getMatchWildcard(input, curr_type, tree.back(), ms, rec, input_front)) { if (ms.log) ms.logMatch("*", curr_type); return true; }
   }
-  
+
   return false;
 }
 

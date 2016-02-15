@@ -20,7 +20,7 @@
 
 #include <sstream>
 #include <string>
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include <libxml/tree.h>
 #include "core.h"
 using namespace std;
@@ -108,7 +108,7 @@ void cConfigParser::parseSubstitutions(xmlNode* list) {
 void cConfigParser::parseSubstitutionsEntry(xmlNode* list, cGraphMaster::SubsType sub_type) {
   for (xmlNode* node = list; node; node = node->next) {
     if (node->type != XML_ELEMENT_NODE) continue;
-    
+
     string elem_name(INV_BAD_CAST(node->name));
     bool use_regex = false;
     if (elem_name == "substitution") {
@@ -147,7 +147,7 @@ void cConfigParser::parseOptions(xmlNode* list) {
   core.cfg_options.allow_dateformat = false;
   core.cfg_options.allow_javascript = false;
   core.cfg_options.allow_system = false;
-  
+
   for (xmlNode* node = list; node; node = node->next) {
     if (node->type != XML_ELEMENT_NODE) continue;
 

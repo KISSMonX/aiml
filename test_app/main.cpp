@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <std_utils/std_util.h>
+#include "std_utils/src/std_util.h"
 #include <fstream>
 #include <iostream>
 #include "../src/aiml.h"
@@ -38,15 +38,15 @@ int main(int argc, char* argv[]) {
   cInterpreter* interpreter = cInterpreter::newInterpreter();
 
   int ret = 0;
-  
+
   // exceptions are used because returning in the middle of the program wouldn't let 'interpreter' be freed
   try {
     cTestAppCallbacks myCallbacks;
     interpreter->registerCallbacks(&myCallbacks);
-    
+
     cout << "Initializing interpreter..." << endl;
     if (!interpreter->initialize("libaiml.xml")) throw 1;
-    
+
     string line;
     cout << "Type \"quit\" to... guess..." << endl;
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     while (getline(cin, line)) {
       if (strip(line).empty()) { cout << "You: " << flush; continue; }
       if (line == "quit") break;
-      
+
       /** remove the last parameter to avoid logging the match **/
       if (!interpreter->respond(line, "localhost", result, &log)) throw 3;
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
       }
       cout << "You: " << flush;
     }
-  
+
     /** Uncomment this line out and you'll see that the bot will no longer remember user vars **/
     //interpreter->unregisterUser("localhost");
   }

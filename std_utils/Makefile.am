@@ -2,9 +2,5 @@
 # have all needed files, that a GNU package needs
 AUTOMAKE_OPTIONS = foreign 1.4
 
-SUBDIRS = std_utils/src test_app
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libaiml.pc
-
-
+SUBDIRS = src stdutil_test
+_SOURCES = clog.cpp

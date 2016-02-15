@@ -20,8 +20,8 @@
 
 #include <list>
 #include <string>
-#include <std_utils/cconfig.h>
-#include <std_utils/std_util.h>
+#include "std_utils/src/cconfig.h"
+#include "std_utils/src/std_util.h"
 #include "core.h"
 
 using namespace std;
@@ -39,7 +39,7 @@ cUser::cUser(const string& _name, AIMLError* _last_error, const StringMAP* _botv
 const string& cUser::getThat(bool for_matching, unsigned int which, unsigned int sentence) const {
   if (which == 0 || sentence == 0) { set_error(AIMLERR_NEG_THAT_INDEX); return emptyString; }
   if (which > LIBAIML_MAX_THAT_SIZE || sentence > that_array[which-1].size()) return (for_matching ? dotString : emptyString);
-    
+
   unsigned int sentence_realnum = that_array[which-1].size() - sentence;
   return (that_array[which-1])[sentence_realnum];
 }
@@ -65,12 +65,12 @@ void cUser::getMatchList(NodeType type, list<string>& out) const {
 const string& cUser::setVar(const string& key, const string& value) {
   string final_value(strip(value));
   StringMAP::iterator it = vars_map.find(key);
-  
+
   if (final_value.empty()) {
     if (it != vars_map.end()) vars_map.erase(it);
   }
   else vars_map[key] = strip(value);
-  
+
   return value;
 }
 
